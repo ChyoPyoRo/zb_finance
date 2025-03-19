@@ -13,7 +13,10 @@ public enum ErrorCode {
 
     DUPLICATE_ID("E002001", "이미 사용중인 ID 입니다."),
     WRONG_ID("E002002", "ID값이 잘못됬습니다"),
-    WRONG_PASSWORD("E002003", "PW값이 잘못됬습니다")
+    WRONG_PASSWORD("E002003", "PW값이 잘못됬습니다"),
+
+    COMPANY_DUPLICATE("E003001", "이미 저장 된 회사입니다."),
+    COMPANY_NOT_EXIST("E003002", "존재하지 않는 회사입니다.")
     ;
 
     private final  String errorCode;

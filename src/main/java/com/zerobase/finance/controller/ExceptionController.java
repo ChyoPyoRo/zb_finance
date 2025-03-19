@@ -3,6 +3,7 @@ package com.zerobase.finance.controller;
 import com.zerobase.finance.dto.ResponseDto;
 import com.zerobase.finance.enums.Description;
 import com.zerobase.finance.enums.ErrorCode;
+import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,14 @@ public class ExceptionController {
         log.error("발생 위치 : {}:{}",e.getStackTrace()[0].getFileName(), e.getStackTrace()[0].getLineNumber());
         return new ResponseEntity<>(ResponseDto.error(HttpStatus.BAD_REQUEST, errorCode), HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ResponseDto> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<ResponseDto> entityExistsException(EntityExistsException e) {
         ErrorCode errorCode = ErrorCode.valueOf(e.getMessage());
         log.error(errorCode.toString());
         log.error("발생 위치 : {}:{}",e.getStackTrace()[0].getFileName(), e.getStackTrace()[0].getLineNumber());
-        return new ResponseEntity<>(ResponseDto.error(HttpStatus.CONFLICT, errorCode), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ResponseDto.error(HttpStatus.BAD_REQUEST, errorCode), HttpStatus.BAD_REQUEST);
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex){

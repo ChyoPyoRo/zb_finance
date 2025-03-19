@@ -1,5 +1,6 @@
 package com.zerobase.finance.utils;
 
+import com.zerobase.finance.entity.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,10 +26,12 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));//Base64로 encode된 String 을 기반으로 Key 생성
     }
 
-    public String createToken(String userUuid) {
+    public String createToken(Users user) {
         Date now = new Date();
+        String userUuid = user.getUuid().toString();
+        String role = user.getRoleType().toString();
         return Jwts.builder()
-                .subject(userUuid)//jwt 제목
+                .subject(userUuid+":"+role)//jwt 제목
                 .issuedAt(now)//생성 시간
                 .expiration(new Date(now.getTime() + expirationMs))//기한
                 .issuer("finance")//jwt 발급자
