@@ -1,5 +1,6 @@
 package com.zerobase.finance.entity;
 
+import com.zerobase.finance.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +22,8 @@ public class Users {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
 
 }
