@@ -28,11 +28,11 @@ public class SecurityConfig{
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize->
                         authorize
-                                .requestMatchers("/auth/**").permitAll()
-                                .anyRequest().authenticated())
+                                .requestMatchers("/auth/**").permitAll()//해당 url에 관한 요청 허용
+                                .anyRequest().authenticated())//이외의 요청에 대해서 인증 실행
                 .httpBasic(Customizer.withDefaults())
-                .sessionManagement(sessionManagement ->sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(sessionManagement ->sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//세션 유지 x(jwt 인증 방식이여서)
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)//앞의 필터를 뒤의 필터 이전에 실행
                 ;
         return http.build();
     }

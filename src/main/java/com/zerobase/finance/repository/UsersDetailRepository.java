@@ -16,10 +16,9 @@ public class UsersDetailRepository {
         usersRepository.save(user);
     }
 
-    public boolean checkSameUserId(String userId) {
-        Users result =  queryFactory.selectFrom(users)
+    public Users checkSameUserId(String userId) {
+        return queryFactory.selectFrom(users)
                 .where(users.loginId.eq(userId))
                 .fetchOne();
-        return result != null;//유저 존재하면 true
     }
 }

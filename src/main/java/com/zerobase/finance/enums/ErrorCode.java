@@ -11,7 +11,9 @@ public enum ErrorCode {
     JWT_TOKEN_INVALID("E001002", "유효하지 않은 토큰입니다."),
     MISSING_OR_INVALID_PARAM("E001003", "잘못된 파라미터가 전달됬거나 누락된 필수 파라미터가 존재합니다."),
 
-    DUPLICATE_ID("E002001", "이미 사용중인 ID 입니다.")
+    DUPLICATE_ID("E002001", "이미 사용중인 ID 입니다."),
+    WRONG_ID("E002002", "ID값이 잘못됬습니다"),
+    WRONG_PASSWORD("E002003", "PW값이 잘못됬습니다")
     ;
 
     private final  String errorCode;

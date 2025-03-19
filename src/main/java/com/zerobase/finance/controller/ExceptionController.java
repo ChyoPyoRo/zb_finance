@@ -32,6 +32,8 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex){
         log.error(ex.getMessage());
+        //개발용
+        log.error("{}",ex);
         log.error("발생 위치 : {}:{}",ex.getStackTrace()[0].getFileName(), ex.getStackTrace()[0].getLineNumber());
         return new ResponseEntity<>(ResponseDto.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.UNEXPECTED_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
