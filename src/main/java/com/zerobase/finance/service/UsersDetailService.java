@@ -5,6 +5,7 @@ import com.zerobase.finance.dto.UserSignUpRequestDto;
 import com.zerobase.finance.entity.Users;
 import com.zerobase.finance.enums.Description;
 import com.zerobase.finance.enums.ErrorCode;
+import com.zerobase.finance.enums.RoleType;
 import com.zerobase.finance.repository.UsersDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class UsersDetailService {
 
     public ResponseDto<?> userSignUp(UserSignUpRequestDto requestDto){
         if(userDetailRepository.checkSameUserId(requestDto.getId())) throw new DataIntegrityViolationException(ErrorCode.DUPLICATE_ID.name());
-        Users user = Users.builder().loginId(requestDto.getId()).password(pwdEncoder(requestDto.getPassword())).build();
+        Users user = Users.builder().loginId(requestDto.getId()).password(pwdEncoder(requestDto.getPassword())).roleType(RoleType.ADMIN).build();
         userDetailRepository.signUP(user);
         return ResponseDto.success();
     }
