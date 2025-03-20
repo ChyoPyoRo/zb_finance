@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
-public class ReadAllCompanyResponseDto{
+public class CompanyDto {
     private String companyName;
     private String companyTicker;
 }

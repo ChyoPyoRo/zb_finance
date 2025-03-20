@@ -19,5 +19,5 @@ public class Dividend {
     @Column(name = "company_id")
     private UUID companyId;
     private LocalDateTime date;
-    private String dividend;
+    private String dividends;
 }

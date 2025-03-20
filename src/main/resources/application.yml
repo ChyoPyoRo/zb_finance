@@ -1,4 +1,6 @@
 spring:
+  cache:
+    type: redis
   application:
     name: zb-financial
 
@@ -24,4 +26,4 @@ spring:
     redis:
       port: 6379
       host: localhost
-pwd : hello
+

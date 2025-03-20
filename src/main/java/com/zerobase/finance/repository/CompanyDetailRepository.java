@@ -2,7 +2,8 @@ package com.zerobase.finance.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.zerobase.finance.dto.ReadAllCompanyResponseDto;
+import com.zerobase.finance.dto.CompanyDto;
+import com.zerobase.finance.dto.ReadFinanceInfoResponseDto;
 import com.zerobase.finance.entity.Company;
 import com.zerobase.finance.entity.Dividend;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.zerobase.finance.entity.QCompany.company;
+import static com.zerobase.finance.entity.QDividend.dividend;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,9 +46,9 @@ public class CompanyDetailRepository {
         dividendRepository.deleteAll();
     }
 
-    public Page<ReadAllCompanyResponseDto> readAllCompany(Pageable pageable) {
-        List<ReadAllCompanyResponseDto> companyList = queryFactory
-                .select(Projections.bean(ReadAllCompanyResponseDto.class,
+    public Page<CompanyDto> readAllCompany(Pageable pageable) {
+        List<CompanyDto> companyList = queryFactory
+                .select(Projections.bean(CompanyDto.class,
                         company.name.as("companyName"),
                         company.ticker.as("companyTicker")
                         ))
@@ -57,5 +59,14 @@ public class CompanyDetailRepository {
                 .fetch();
         long total = queryFactory.selectFrom(company).fetch().size();
         return new PageImpl<>(companyList, pageable, total);
+    }
+
+    public Company findCompanyByCompanyName(String companyName) {
+        return queryFactory.selectFrom(company).where(company.name.eq(companyName)).fetchOne();
+    }
+    public List<ReadFinanceInfoResponseDto.DividendDto> dividendByCompany(Company company) {
+        return queryFactory.select(Projections.constructor(ReadFinanceInfoResponseDto.DividendDto.class,
+                dividend.date,dividend.dividends.as("dividend")
+                )).from(dividend).where(dividend.companyId.eq(company.getId())).fetch();
     }
 }

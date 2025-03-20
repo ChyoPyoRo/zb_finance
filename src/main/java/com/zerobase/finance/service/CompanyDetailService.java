@@ -1,9 +1,6 @@
 package com.zerobase.finance.service;
 
-import com.zerobase.finance.dto.AddCompanyRequestDto;
-import com.zerobase.finance.dto.ReadAllCompanyResponseDto;
-import com.zerobase.finance.dto.ResponseDto;
-import com.zerobase.finance.dto.ScrapingDataDto;
+import com.zerobase.finance.dto.*;
 import com.zerobase.finance.entity.Company;
 import com.zerobase.finance.entity.Dividend;
 import com.zerobase.finance.enums.ErrorCode;
@@ -15,14 +12,12 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +55,7 @@ public class CompanyDetailService {
 
     public ResponseDto<?> readAllCompanyData(int pageNum) throws IOException {
         Pageable pageable = PageRequest.of(pageNum-1, 10);
-        Page<ReadAllCompanyResponseDto> result = companyDetailRepository.readAllCompany(pageable);
+        Page<CompanyDto> result = companyDetailRepository.readAllCompany(pageable);
         return ResponseDto.success(result);
     }
 
@@ -85,7 +80,16 @@ public class CompanyDetailService {
 
     private void saveData(Company company, List<ScrapingDataDto> scrapingDataDtoList){
         List<Dividend> dividends = scrapingDataDtoList.stream()
-                .map(data->Dividend.builder().companyId(company.getId()).date(data.getDate()).dividend(data.getDividend()).build()).toList();
+                .map(data->Dividend.builder().companyId(company.getId()).date(data.getDate()).dividends(data.getDividend()).build()).toList();
         companyDetailRepository.saveAllDividend(dividends);
+    }
+
+
+    @Cacheable(key = "#companyName", value = "finance")
+    public ResponseDto<?> getfinanceDtail(String companyName) throws IllegalAccessException {
+        Company company = companyDetailRepository.findCompanyByCompanyName(companyName);
+        if(company == null) throw new IllegalAccessException(ErrorCode.COMPANY_NOT_EXIST.name());
+        ReadFinanceInfoResponseDto result = new ReadFinanceInfoResponseDto(company, companyDetailRepository.dividendByCompany(company));
+        return ResponseDto.success(result);
     }
 }
