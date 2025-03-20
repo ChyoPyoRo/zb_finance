@@ -36,4 +36,9 @@ public class CompanyController{
         ResponseDto<?> result = companyDetailService.getfinanceDtail(companyName);
         return ResponseEntity.ok(result);
     }
+    @GetMapping("/company/autocomplete")
+    public ResponseEntity<?> getCompanyAutocomplete(@RequestParam String prefix) throws IllegalAccessException {
+        ResponseDto<?> result = companyDetailService.getSearchWord(prefix);
+        return ResponseEntity.ok(result);
+    }
 }

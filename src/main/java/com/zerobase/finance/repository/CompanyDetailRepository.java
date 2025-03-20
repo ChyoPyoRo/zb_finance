@@ -71,4 +71,17 @@ public class CompanyDetailRepository {
                 dividend.date,dividend.dividends.as("dividend")
                 )).from(dividend).where(dividend.companyId.eq(company.getId())).fetch();
     }
+
+    public List<String> searchCompanyByPrefix(String prefix) {
+        return queryFactory.select(company.name)
+                .from(company)
+                .where(
+                        company.name.startsWith(prefix)
+                                .or(company.name.containsIgnoreCase(prefix))
+                                .or(company.name.endsWith(prefix))
+                )
+                .limit(10)
+                .fetch();
+
+    }
 }

@@ -92,4 +92,9 @@ public class CompanyDetailService {
         ReadFinanceInfoResponseDto result = new ReadFinanceInfoResponseDto(company, companyDetailRepository.dividendByCompany(company));
         return ResponseDto.success(result);
     }
+
+    public ResponseDto<?> getSearchWord(String prefix) {
+        List<String> companyList = companyDetailRepository.searchCompanyByPrefix(prefix);
+        return ResponseDto.success(companyList);
+    }
 }
