@@ -7,6 +7,7 @@ import com.zerobase.finance.dto.ReadFinanceInfoResponseDto;
 import com.zerobase.finance.entity.Company;
 import com.zerobase.finance.entity.Dividend;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.zerobase.finance.entity.QCompany.company;
 import static com.zerobase.finance.entity.QDividend.dividend;
@@ -83,5 +85,14 @@ public class CompanyDetailRepository {
                 .limit(10)
                 .fetch();
 
+    }
+
+    public void deleteDividend(UUID companyId) {
+        queryFactory.delete(dividend).where(dividend.companyId.eq(companyId)).execute();
+    }
+
+    @CacheEvict(value = "finance", key = "#targetCompany.name")
+    public void deleteCompany(Company targetCompany) {
+        queryFactory.delete(company).where(company.id.eq(targetCompany.getId())).execute();
     }
 }

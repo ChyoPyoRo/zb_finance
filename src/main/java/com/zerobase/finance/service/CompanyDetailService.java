@@ -12,6 +12,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,7 @@ public class CompanyDetailService {
     private final ScrappingUtil scrappingUtil;
 
     @Scheduled(cron="0 0 0 * * *")
+    @CacheEvict(value = "finance", allEntries = true)
     public void updateCompanyData() throws IOException {
         log.info("Method start : updateCompanyData");
         List<Company> companyList = companyDetailRepository.getAllCompanyList();
@@ -96,5 +98,14 @@ public class CompanyDetailService {
     public ResponseDto<?> getSearchWord(String prefix) {
         List<String> companyList = companyDetailRepository.searchCompanyByPrefix(prefix);
         return ResponseDto.success(companyList);
+    }
+
+    public ResponseDto<?> deleteCompanyByTicker(String ticker) throws IllegalAccessException {
+        if(!UserUtils.isAdmin()) throw new IllegalAccessException(ErrorCode.UNAUTHORIZED.name());
+        Company company = companyDetailRepository.findCompanyByticker(ticker);
+        if(company == null) throw new IllegalAccessException(ErrorCode.COMPANY_NOT_EXIST.name());
+        companyDetailRepository.deleteDividend(company.getId());
+        companyDetailRepository.deleteCompany(company);
+        return ResponseDto.success();
     }
 }

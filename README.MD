@@ -12,6 +12,8 @@ Spring data jpa, QueryDsl, H2, JJWT, Spring Security, Redis, Docker
 - 전체 회사 목록 가져오기 : Page interface에 맞게 데이터 반환
 - 배당금 상세 정보 : Redis를 사용한 캐싱으로 한번 불러온 회사는 빠르게 접근 가능
 - 자동 완성 : 회사 이름 검색 용, 10개 씩 리턴
-- 
+- 회사 삭제 : 배당금 정보, 캐시, 회사 전부 삭제. 인증된 사용자만 가능
+
+## [PostMan Documentation](https://documenter.getpostman.com/view/40737812/2sAYkGJy83)
 
 Redis -> Docker로 서버 실행

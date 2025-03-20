@@ -41,4 +41,9 @@ public class CompanyController{
         ResponseDto<?> result = companyDetailService.getSearchWord(prefix);
         return ResponseEntity.ok(result);
     }
+    @DeleteMapping("/company/{ticker}")
+    public ResponseEntity<?> deleteCompany(@PathVariable String ticker) throws IOException, IllegalAccessException {
+        ResponseDto<?> result = companyDetailService.deleteCompanyByTicker(ticker);
+        return ResponseEntity.ok(result);
+    }
 }
