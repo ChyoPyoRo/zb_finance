@@ -85,7 +85,7 @@ public class CompanyDetailService {
     }
 
 
-    @Cacheable(key = "#companyName", value = "finance")
+
     public ResponseDto<?> getfinanceDtail(String companyName) throws IllegalAccessException {
         Company company = companyDetailRepository.findCompanyByCompanyName(companyName);
         if(company == null) throw new IllegalAccessException(ErrorCode.COMPANY_NOT_EXIST.name());

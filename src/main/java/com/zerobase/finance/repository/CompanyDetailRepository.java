@@ -7,6 +7,7 @@ import com.zerobase.finance.dto.ReadFinanceInfoResponseDto;
 import com.zerobase.finance.entity.Company;
 import com.zerobase.finance.entity.Dividend;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -60,10 +61,11 @@ public class CompanyDetailRepository {
         long total = queryFactory.selectFrom(company).fetch().size();
         return new PageImpl<>(companyList, pageable, total);
     }
-
+    @Cacheable(key = "#companyName", value = "finance")
     public Company findCompanyByCompanyName(String companyName) {
         return queryFactory.selectFrom(company).where(company.name.eq(companyName)).fetchOne();
     }
+    @Cacheable(key = "#company.ticker", value = "finance")
     public List<ReadFinanceInfoResponseDto.DividendDto> dividendByCompany(Company company) {
         return queryFactory.select(Projections.constructor(ReadFinanceInfoResponseDto.DividendDto.class,
                 dividend.date,dividend.dividends.as("dividend")

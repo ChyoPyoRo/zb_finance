@@ -10,6 +10,6 @@ Spring data jpa, QueryDsl, H2, JJWT, Spring Security
 - 회사 정보 저장하기 : 인증된 사용자인 경우 회사 정버 스크래핑 가능
 - 회사 정보 업데이트 : 매일 일정한 시간에 회사 정보 업데이트 가능
 - 전체 회사 목록 가져오기 : Page interface에 맞게 데이터 반환
-- 
+- 배당금 상세 정보 : Redis를 사용한 캐싱으로 한번 불러온 회사는 빠르게 접근 가능
 
 Redis -> Docker로 서버 실행
