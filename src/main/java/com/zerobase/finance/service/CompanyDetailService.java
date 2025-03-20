@@ -14,11 +14,13 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +32,26 @@ public class CompanyDetailService {
     private final CompanyDetailRepository companyDetailRepository;
     private final ScrappingUtil scrappingUtil;
 
-    
+    @Scheduled(cron="0 0 0 * * *")
+    public void updateCompanyData() throws IOException {
+        log.info("Method start : updateCompanyData");
+        List<Company> companyList = companyDetailRepository.getAllCompanyList();
+        companyDetailRepository.deleteAllDividend();
+        //redis cache도 지우기
+        List<ScrapingDataDto> dataList = new ArrayList<>();
+        for(Company company : companyList){
+            dataList = scrappingUtil.getScrapingData(company.getTicker());
+            saveData(company, dataList);
+            //redis 캐시에도 저장
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                log.error(e.getMessage());
+            }
+        }
+        log.info("Method finish : updateCompanyData");
+
+    }
 
     public ResponseDto<?> saveCompanyInfo(AddCompanyRequestDto requestDto) throws IOException, ScrappiingException, IllegalAccessException {
         if(!UserUtils.isAdmin()) throw new IllegalAccessException(ErrorCode.UNAUTHORIZED.name());

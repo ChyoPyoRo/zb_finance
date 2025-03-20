@@ -30,4 +30,12 @@ public class CompanyDetailRepository {
     public void saveAllDividend(List<Dividend> dividends) {
         dividendRepository.saveAll(dividends);
     }
+
+    public List<Company> getAllCompanyList() {
+        return queryFactory.selectFrom(company).fetch();
+    }
+
+    public void deleteAllDividend() {
+        dividendRepository.deleteAll();
+    }
 }
