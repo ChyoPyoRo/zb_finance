@@ -1,6 +1,7 @@
 package com.zerobase.finance.service;
 
 import com.zerobase.finance.dto.AddCompanyRequestDto;
+import com.zerobase.finance.dto.ReadAllCompanyResponseDto;
 import com.zerobase.finance.dto.ResponseDto;
 import com.zerobase.finance.dto.ScrapingDataDto;
 import com.zerobase.finance.entity.Company;
@@ -14,6 +15,10 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -51,6 +56,12 @@ public class CompanyDetailService {
         }
         log.info("Method finish : updateCompanyData");
 
+    }
+
+    public ResponseDto<?> readAllCompanyData(int pageNum) throws IOException {
+        Pageable pageable = PageRequest.of(pageNum-1, 10);
+        Page<ReadAllCompanyResponseDto> result = companyDetailRepository.readAllCompany(pageable);
+        return ResponseDto.success(result);
     }
 
     public ResponseDto<?> saveCompanyInfo(AddCompanyRequestDto requestDto) throws IOException, ScrappiingException, IllegalAccessException {
