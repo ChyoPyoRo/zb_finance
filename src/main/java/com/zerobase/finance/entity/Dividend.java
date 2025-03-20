@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Builder
@@ -16,7 +17,7 @@ public class Dividend {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "company_id")
-    private Long companyId;
+    private UUID companyId;
     private LocalDateTime date;
     private String dividend;
 }

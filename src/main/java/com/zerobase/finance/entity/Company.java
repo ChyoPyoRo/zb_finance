@@ -3,6 +3,8 @@ package com.zerobase.finance.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Builder
 @Getter
@@ -11,8 +13,7 @@ import lombok.*;
 @ToString //디버깅용
 public class Company {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     @Column(nullable = false)
     private String name;
     @Column(unique = true, nullable = false)

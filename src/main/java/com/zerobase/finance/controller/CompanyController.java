@@ -1,6 +1,7 @@
 package com.zerobase.finance.controller;
 
 import com.zerobase.finance.dto.AddCompanyRequestDto;
+import com.zerobase.finance.dto.ResponseDto;
 import com.zerobase.finance.enums.ErrorCode;
 import com.zerobase.finance.service.CompanyDetailService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @Slf4j
 @RequestMapping("/company")
@@ -19,9 +22,9 @@ public class CompanyController{
     private final CompanyDetailService companyDetailService;
 
     @PostMapping("")
-    public ResponseEntity<?> addNewCompany(@RequestBody AddCompanyRequestDto requestDto){
+    public ResponseEntity<?> addNewCompany(@RequestBody AddCompanyRequestDto requestDto) throws IOException, IllegalAccessException {
         if(!requestDto.isValid()) throw new IllegalArgumentException(ErrorCode.MISSING_OR_INVALID_PARAM.name());
-        companyDetailService.saveCompanyInfo(requestDto);
-        return ResponseEntity.ok().build();
+        ResponseDto result = companyDetailService.saveCompanyInfo(requestDto);
+        return ResponseEntity.ok(result);
     }
 }

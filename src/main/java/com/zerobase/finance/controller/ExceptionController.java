@@ -3,6 +3,7 @@ package com.zerobase.finance.controller;
 import com.zerobase.finance.dto.ResponseDto;
 import com.zerobase.finance.enums.Description;
 import com.zerobase.finance.enums.ErrorCode;
+import com.zerobase.finance.exception.ScrappiingException;
 import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +28,22 @@ public class ExceptionController {
         log.error(errorCode.toString());
         log.error("발생 위치 : {}:{}",e.getStackTrace()[0].getFileName(), e.getStackTrace()[0].getLineNumber());
         return new ResponseEntity<>(ResponseDto.error(HttpStatus.BAD_REQUEST, errorCode), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ScrappiingException.class)
+    public ResponseEntity<ResponseDto> scrappiingException(ScrappiingException e) {
+        ErrorCode errorCode = ErrorCode.valueOf(e.getMessage());
+        log.error(errorCode.toString());
+        log.error("발생 위치 : {}:{}",e.getStackTrace()[0].getFileName(), e.getStackTrace()[0].getLineNumber());
+        return new ResponseEntity<>(ResponseDto.error(HttpStatus.BAD_REQUEST, errorCode), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<ResponseDto> unAuthException(IllegalAccessException e) {
+        ErrorCode errorCode = ErrorCode.valueOf(e.getMessage());
+        log.error(errorCode.toString());
+        log.error("발생 위치 : {}:{}",e.getStackTrace()[0].getFileName(), e.getStackTrace()[0].getLineNumber());
+        return new ResponseEntity<>(ResponseDto.error(HttpStatus.UNAUTHORIZED, errorCode), HttpStatus.UNAUTHORIZED);
     }
 
 
